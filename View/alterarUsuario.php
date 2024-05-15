@@ -40,9 +40,11 @@ require_once '../Control/listarUsuariosController.php';
       <h1>Alteração de Cadastro de Usuário</h1>
     </div>
     <?php
+    $usuario_selecionado = null;
     foreach ($todos as $t) { 
       if ($t["idUsu"] == $_GET["idUsu"]) {
         $usuario_selecionado = $t;
+        break;
       }}?>
 
     <form name="alterarUsu" id="alterarUsu">
@@ -52,7 +54,7 @@ require_once '../Control/listarUsuariosController.php';
           <th><p>Nome:</p> <input type="text" name="nomeUsu" id="nomeUsu" value="<?php echo $usuario_selecionado['nomeUsu']; ?>" required></th>
           <th><p>Sobrenome:</p> <input type="text" name="sobrenomeUsu" id="sobrenomeUsu" value="<?php echo $usuario_selecionado["sobrenomeUsu"]; ?>" required></th>
           <th><p>Email:</p> <input type="email" name="emailUsu" id="emailUsu" value="<?php echo $usuario_selecionado["emailUsu"]; ?>" required></th>
-          <th><p>Celular:</p> <input type="text" name="telefoneUsu" id="telefoneUsu" value="<?php echo $usuario_selecionado["telefoneUsu"]; ?>" required></th>
+          <th><p>Celular:</p> <input type="tel" name="telefoneUsu" id="telefoneUsu" value="<?php echo $usuario_selecionado["telefoneUsu"]; ?>" required></th>
           <th><p>Perfil:</p> <input type="text" name="perfilUsu" id="perfilUsu" value="<?php echo $usuario_selecionado["perfilUsu"]; ?>" required></th>
           <th><p>Situação:</p> <input type="text" name="situacaoUsu" id="situacaoUsu" value="<?php echo $usuario_selecionado["situacaoUsu"]; ?>" required></th>
         </tr>
@@ -63,48 +65,38 @@ require_once '../Control/listarUsuariosController.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
      document.getElementById("alterarUsu").addEventListener("submit", function (event) {
-      event.preventDefault();
+  event.preventDefault();
 
+  const formData = new FormData(this);
 
-      const formData = new FormData(this);
-      console.log(formData);
-    
-
-      fetch("../Control/alterarUsuarioController.php", {
-        method: "POST",
-        body: formData
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(response.statusText);
-          }
-          console.log(response);
-          return response.json();
-        })
-        .then(data => {
-          if (data.success) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Sucesso!',
-              text: data.message,
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Erro!',
-              text: data.message,
-            });
-          }
-        })
-        .catch(error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro!',
-            text: 'Ocorreu um erro ao processar o cadastro. Tente novamente mais tarde.',
-          });
-          console.error('Error:', error);
-        });
+  fetch("../Control/alterarUsuarioController.php", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.text(); 
+      } else {
+        throw new Error('Falha ao salvar as alterações.'); 
+      }
+    })
+    .then(data => {
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Usuário alterado com sucesso :)',
+        text: data.message, 
+      });
+    })
+    .catch(error => {
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro!',
+        text: error.message, 
+      });
     });
+});
     </script>
   </main>
 </body>
