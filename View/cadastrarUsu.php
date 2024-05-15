@@ -24,6 +24,7 @@
     <div class="form">
       <header>
         <h1>Cadastre-se</h1>
+        <a href="../index.php"></a>
       </header>
       <form id="cadastro">
         <div class="cont">

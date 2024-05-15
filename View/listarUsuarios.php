@@ -2,11 +2,8 @@
 require_once '../Control/listarUsuariosController.php';
 require_once '../Control/excluirUsuarioController.php';
 require_once '../Control/alterarUsuarioController.php';
-//echo '<pre>';
-//var_dump($todos);
 ?>
 
-</html>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -19,49 +16,68 @@ require_once '../Control/alterarUsuarioController.php';
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap" rel="stylesheet" />
     <link href="../_cdn/boot.css" rel="stylesheet" />
     <link href="../_cdn/style.css" rel="stylesheet" />
-    <link href="../_cdn/list_format.css" rel="stylesheet" />
-
+    <link href="../_cdn/listarUsuarios.css" rel="stylesheet" />
     <title>Meraki Moda Feminina</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('.delete-user').click(function(e) {
+            e.preventDefault();
+            var userId = $(this).data('id');
+            if(confirm('Tem certeza que deseja excluir este usuário?')) {
+                $.ajax({
+                    url: '../Control/excluirUsuarioController.php',
+                    type: 'GET',
+                    data: { idUsu: userId },
+                    success: function(response) {
+                        alert('Usuário excluído com sucesso!');
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('Erro ao excluir usuário.');
+                    }
+                });
+            }
+        });
+    });
+    </script>
 </head>
 
 <body>
-    <!-- INICIO CABEÇALHO -->
     <header class="main_header">
         <div class="main_header_content">
-            <a href="cadastrarUsu.php" class="logo">
-                <img width="150" height="150" src="../img/logo.png" alt="Meraki Moda Feminina"
-                    title="Meraki Moda Feminina" />
+            <a href="#" class="logo">
+                <img width="150" height="150" src="../img/logo.png" alt="Meraki Moda Feminina" title="Meraki Moda Feminina" />
             </a>
             <nav class="main_header_content_menu">
                 <ul>
-                    <li>
-                        <a href="../index.php">Voltar</a>
-                    </li>
+                    <li><a href="opcao.php">Voltar</a></li>
                 </ul>
             </nav>
         </div>
     </header>
-    <!-- FIM CABEÇALHO -->
+
     <div class="list_container">
         <h1>Listagem de Dados</h1>
-       
     </div>
-    <?php
-    foreach ($todos as $t) { ?>
 
-        <!-- Exibir o nome do usuário -->
-        Nome:
-        <?php echo $t['nomeUsu']; ?>
+    <?php foreach ($todos as $t) : ?>
+        <table>
+            <tr>
+                <th><p>Nome:</p> <input type="text" name="nomeUsu" value="<?= $t['nomeUsu']; ?>" required></th>
+                <th><p>Sobrenome:</p> <input type="text" name="sobrenomeUsu" value="<?= $t['sobrenomeUsu']; ?>" required></th>
+                <th><p>Email:</p> <input type="email" name="emailUsu" value="<?= $t['emailUsu']; ?>" required></th>
+                <th><p>Celular:</p> <input type="text" name="telefoneUsu" value="<?= $t['telefoneUsu']; ?>"></th>
+                <th><p>Perfil:</p> <input type="text" name="perfilUsu" value="<?= $t['perfilUsu']; ?>"></th>
+                <th><p>Situação:</p> <input type="text" name="situacaoUsu" value="<?= $t['situacaoUsu']; ?>"></th>
+                <th>
+                    <a href="alterarUsuario.php?idUsu=<?= $t['idUsu']; ?>">&#9998;</a>
+                    <a href="#" class="delete-user" data-id="<?= $t['idUsu']; ?>">&#10008;</a>
+                </th>
+            </tr>
+        </table>
+        
+    <?php endforeach; ?>
 
-
-        <!-- Link para editar o usuário -->
-        <a href="alterarUsuario.php?idUsu=<?php echo $t['idUsu']; ?>">&#9998;</a>
-
-        <!-- Link para excluir o usuário -->
-        <a href="../Control/excluirUsuarioController.php?idUsu=<?php echo $t['idUsu']; ?>"> &#10008;</a>
-        </br>
-    <?php } ?>
-
-
-    
 </body>
+</html>

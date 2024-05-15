@@ -105,52 +105,42 @@ class UsuarioDAO
 
     public function alterarUsuario(UsuarioDTO $usuarioDTO)
     {
-
         try {
             $sql = "UPDATE usuario SET 
             nomeUsu = ?, 
             sobrenomeUsu = ?, 
             emailUsu = ?, 
             telefoneUsu = ?, 
-            senhaUsu = ?, 
             perfilUsu = ?, 
             situacaoUsu = ?
             WHERE idUsu = ?";
             $stmt = $this->pdo->prepare($sql);
-
-            $idUsu= $usuarioDTO->getIdUsu();
+    
+            $idUsu = $usuarioDTO->getIdUsu();
             $nomeUsu = $usuarioDTO->getNomeUsu();
-            $sobrenomeUsu= $usuarioDTO->getSobrenomeUsu();
-            $emailUsu= $usuarioDTO->getEmailUsu();
-            $telefoneUsu= $usuarioDTO->getTelefoneUsu();
-            $senhaUsu= $usuarioDTO->getSenhaUsu();
-            $perfilUsu= $usuarioDTO->getPerfilUsu();
-            $situacaoUsu= $usuarioDTO->getSituacaoUsu();
-
-            
-            $stmt->bindValue(1, $idUsu);
-            $stmt->bindValue(2, $nomeUsu);
-            $stmt->bindValue(3, $sobrenomeUsu);
-            $stmt->bindValue(4, $emailUsu);
-            $stmt->bindValue(5, $telefoneUsu);
-            $stmt->bindValue(6, $senhaUsu);
-            $stmt->bindValue(7, $perfilUsu);
-            $stmt->bindValue(8, $situacaoUsu);
-            
-
+            $sobrenomeUsu = $usuarioDTO->getSobrenomeUsu();
+            $emailUsu = $usuarioDTO->getEmailUsu();
+            $telefoneUsu = $usuarioDTO->getTelefoneUsu();
+            $perfilUsu = $usuarioDTO->getPerfilUsu();
+            $situacaoUsu = $usuarioDTO->getSituacaoUsu();
+    
+            $stmt->bindValue(1, $nomeUsu);
+            $stmt->bindValue(2, $sobrenomeUsu);
+            $stmt->bindValue(3, $emailUsu);
+            $stmt->bindValue(4, $telefoneUsu);
+            $stmt->bindValue(5, $perfilUsu);
+            $stmt->bindValue(6, $situacaoUsu);
+            $stmt->bindValue(7, $idUsu);
+    
             $retorno = $stmt->execute();
+    
+            // Verifica se a atualização foi bem-sucedida
+           return $retorno;
+    }catch (PDOException $exc) {
+        echo $exc->getMessage();
 
-            if ($retorno) {
-              //  echo "\nSucesso\n";
-            } else {
-              //  echo "\nerro\n";
-            }
-
-            return $retorno;
-        } catch (PDOException $exc) {
-            echo $exc->getMessage();
-        }
     }
+}
 
     //PesquisarUsuarioPorId
     public function pesquisarUsuarioPorId($idUsu)

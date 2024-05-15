@@ -1,3 +1,6 @@
+<?php
+require_once '../Control/listarUsuariosController.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -11,7 +14,7 @@
   <link href="../_cdn/boot.css" rel="stylesheet" />
   <link href="../_cdn/style.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-  <link href="../_cdn/list_format.css" rel="stylesheet" />
+  <link href="../_cdn/alterarUsuario.css" rel="stylesheet" />
   <title>Alteração de Cadastro</title>
   <link rel="stylesheet" href="../_cdn/alterar.css">
 </head>
@@ -20,13 +23,13 @@
   <main>
     <header class="main_header">
       <div class="main_header_content">
-        <a href="cadastrarUsu.php" class="logo">
+        <a href="#" class="logo">
           <img width="150" height="150" src="../img/logo.png" alt="Meraki Moda Feminina" title="Meraki Moda Feminina" />
         </a>
         <nav class="main_header_content_menu">
           <ul>
             <li>
-              <a href="../View/opcao.php">Voltar</a>
+              <a href="../View/listarUsuarios.php">Voltar</a>
             </li>
           </ul>
         </nav>
@@ -36,28 +39,72 @@
     <div class="list_container">
       <h1>Alteração de Cadastro de Usuário</h1>
     </div>
+    <?php
+    foreach ($todos as $t) { 
+      if ($t["idUsu"] == $_GET["idUsu"]) {
+        $usuario_selecionado = $t;
+      }}?>
 
-    <form name="alterarUsu" id="alterarUsu" action="../Control/alterarUsuarioController.php" method="POST">
-      <input type="hidden" name="idUsu" value="<?php echo $retorno["idUsu"]; ?>">
-      <table width="1150px">
+    <form name="alterarUsu" id="alterarUsu">
+      <input type="hidden" name="idUsu" id="idUsu" value="<?php echo $_GET["idUsu"]; ?>">
+      <table>
         <tr>
-          <th>Nome: <input type="text" name="nomeUsu" id="nomeUsu" value="<?php echo $retorno["nomeUsu"]; ?>" required></th>
-          <th>Sobrenome: <input type="text" name="sobrenomeUsu" id="sobrenomeUsu" value="<?php echo $retorno["sobrenomeUsu"]; ?>" required></th>
-          <th>Email: <input type="email" name="emailUsu" id="emailUsu" value="<?php echo $retorno["emailUsu"]; ?>" required></th>
-          <th>Telefone: <input type="text" name="telefoneUsu" id="telefoneUsu" value="<?php echo $retorno["telefoneUsu"]; ?>"></th>
-          <th>Perfil: <input type="text" name="perfilUsu" id="perfilUsu" value="<?php echo $retorno["perfilUsu"]; ?>"></th>
-          <th>Situação: <input type="text" name="situacaoUsu" id="situacaoUsu" value="<?php echo $retorno["situacaoUsu"]; ?>"></th>
+          <th><p>Nome:</p> <input type="text" name="nomeUsu" id="nomeUsu" value="<?php echo $usuario_selecionado['nomeUsu']; ?>" required></th>
+          <th><p>Sobrenome:</p> <input type="text" name="sobrenomeUsu" id="sobrenomeUsu" value="<?php echo $usuario_selecionado["sobrenomeUsu"]; ?>" required></th>
+          <th><p>Email:</p> <input type="email" name="emailUsu" id="emailUsu" value="<?php echo $usuario_selecionado["emailUsu"]; ?>" required></th>
+          <th><p>Celular:</p> <input type="text" name="telefoneUsu" id="telefoneUsu" value="<?php echo $usuario_selecionado["telefoneUsu"]; ?>" required></th>
+          <th><p>Perfil:</p> <input type="text" name="perfilUsu" id="perfilUsu" value="<?php echo $usuario_selecionado["perfilUsu"]; ?>" required></th>
+          <th><p>Situação:</p> <input type="text" name="situacaoUsu" id="situacaoUsu" value="<?php echo $usuario_selecionado["situacaoUsu"]; ?>" required></th>
         </tr>
       </table>
       <button type="submit">Salvar Alteração</button>
     </form>
-
-    <!-- Script do SweetAlert2 -->
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-      function simpleAlert() {
-        Swal.fire('Alteração realizada com sucesso!');
-      }
+     document.getElementById("alterarUsu").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+
+      const formData = new FormData(this);
+      console.log(formData);
+    
+
+      fetch("../Control/alterarUsuarioController.php", {
+        method: "POST",
+        body: formData
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          console.log(response);
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Sucesso!',
+              text: data.message,
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Erro!',
+              text: data.message,
+            });
+          }
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro!',
+            text: 'Ocorreu um erro ao processar o cadastro. Tente novamente mais tarde.',
+          });
+          console.error('Error:', error);
+        });
+    });
     </script>
   </main>
 </body>

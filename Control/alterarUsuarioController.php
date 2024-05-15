@@ -2,14 +2,13 @@
 require_once '../Model/DTO/UsuarioDTO.php';
 require_once '../Model/DAO/UsuarioDAO.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $idUsu = $_POST["idUsu"];
-  $nomeUsu = $_POST["nomeUsu"];
-  $sobrenomeUsu = $_POST["sobrenomeUsu"];
-  $emailUsu = $_POST["emailUsu"];
-  $telefoneUsu = $_POST["telefoneUsu"];
-  $perfilUsu = $_POST["perfilUsu"];
-  $situacaoUsu = $_POST["situacaoUsu"];
+  $idUsu = strip_tags($_POST["idUsu"]);
+  $nomeUsu = strip_tags($_POST["nomeUsu"]);
+  $sobrenomeUsu = strip_tags($_POST["sobrenomeUsu"]);
+  $emailUsu = strip_tags($_POST["emailUsu"]);
+  $telefoneUsu = strip_tags($_POST["telefoneUsu"]);
+  $perfilUsu = strip_tags($_POST["perfilUsu"]);
+  $situacaoUsu = strip_tags($_POST["situacaoUsu"]);
 
   $usuarioDTO = new UsuarioDTO;
   $usuarioDTO->setIdUsu($idUsu);
@@ -24,11 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $sucesso = $usuarioDAO->alterarUsuario($usuarioDTO);
 
-  if ($sucesso) {
-    $msg = "Usuário alterado com sucesso! <br>";
+   if ($sucesso) {
+    json_encode(["success" => true, "message" => "Usuário alterado com sucesso!"]);
   } else {
-    $msg = "Aconteceu um problema na alteração de dados.<br>" . $sucesso;
+    json_encode(["success" => false, "message" => "Aconteceu um problema ao alterar o usuário!"]);
   }
-  echo "{$msg}";
-}
+// }
 ?>

@@ -43,7 +43,7 @@ session_start();
         <li><a href="#categorias">Categorias</a></li>
         <li><a href="#reviews">Reviews</a></li>
         <?php if (isset($_SESSION['nomeUsu'])): ?>
-          <li><span>Olá, <?php echo htmlspecialchars($_SESSION['nomeUsu']); ?>!</span></li>
+          <li><span>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nomeUsu']); ?>!</span></li>
           <li><a href="View/logout.php">Logout</a></li>
           <?php if ($_SESSION['perfilUsu'] == "Administrador"): ?>
             <li><a href="View/opcao.php">Painel ADM</a></li>
